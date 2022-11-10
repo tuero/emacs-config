@@ -328,7 +328,7 @@ or the current buffer directory."
 
 (use-package ace-window
   :ensure t 
-  :bind ("M-o" . ace-window)
+  :bind ("C-x o" . ace-window)
   :delight 
   :config (ace-window-display-mode 1)
 )
