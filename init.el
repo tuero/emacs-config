@@ -178,7 +178,7 @@
   "Compile a the current file."
   (interactive)
   (set (make-local-variable 'compile-command)
-    (concat "g++ -Wall -Wextra -Og " (file-name-nondirectory buffer-file-name) " -o " (file-name-nondirectory (file-name-sans-extension buffer-file-name)) )
+    (concat "g++ -Wall -Wextra -Og -std=c++17 " (file-name-nondirectory buffer-file-name) " -o " (file-name-nondirectory (file-name-sans-extension buffer-file-name)) )
   )
   (call-interactively 'compile)
 )
