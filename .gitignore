@@ -1,0 +1,21 @@
+# autosaves
+auto-save-list/*
+*~
+
+# temp files
+.DS_Store
+_init.el
+tramp
+ido.last*
+.lsp-session-*
+
+# custom-set-faces file
+custom.el
+
+# external
+elpa
+
+# Projectile caches
+projectile.cache
+projectile-bookmarks.eld
+recentf
