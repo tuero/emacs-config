@@ -3,6 +3,7 @@
 
 (setq tramp-default-method "plink")
 (require 'tramp)
+(require 'cc-mode)
 
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
 
@@ -93,6 +94,11 @@
     (company-mode -1)))
 (add-hook 'shell-mode-hook 'my-shell-mode-setup-function)
 
+; -----------------------------------------------
+; flymake errors
+
+;; Define our own flymake error function
+(define-key c-mode-base-map (kbd "C-c v") 'flymake-goto-next-error)
 
 ; -----------------------------------------------
 ; clang-format
@@ -185,7 +191,6 @@
 (setq compile-history '("make"))  
 
 ; Keybinds for compile/recompile with a cmake project for build and debug builds
-(require 'cc-mode)
 (define-key c-mode-base-map (kbd "S-<f5>") 'my-cmake-release-compile)
 (define-key c-mode-base-map (kbd "<f5>") 'my-cmake-release-recompile)
 (define-key c-mode-base-map (kbd "S-<f6>") 'my-cmake-debug-compile)
