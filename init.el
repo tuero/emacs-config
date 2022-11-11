@@ -66,6 +66,19 @@
 (add-hook 'c-mode-hook 'eglot-ensure)
 (add-hook 'c++-mode-hook 'eglot-ensure)
 (setq eldoc-idle-delay 0.1)
+; (setq eldoc-echo-area-use-multiline-p 'truncate-sym-name-if-fit)
+
+; Switch between detailed and single line for eldoc
+(defun toggle-eldoc-detail ()
+  "Toggle eldoc between detail and single line"
+  (interactive)
+  (if (eq eldoc-echo-area-use-multiline-p 1) 
+    (setq eldoc-echo-area-use-multiline-p 'truncate-sym-name-if-fit)
+    (setq eldoc-echo-area-use-multiline-p 1))
+)
+(global-set-key (kbd "C-c h") 'toggle-eldoc-detail)
+
+
 
 ; Company mode 
 (use-package company
@@ -316,10 +329,16 @@ or the current buffer directory."
 ;   (evil-define-key 'evilified neotree-mode-map (kbd "C-w <right>") 'evil-window-right))
 
 ; -----------------------------------------------
+; Navigation
+
 ;remap default goto-line
 (add-to-list 'load-path "~/.emacs.d/external/goto-line-preview/")
 (require 'goto-line-preview)
 (global-set-key [remap goto-line] 'goto-line-preview)
+
+; M-. xref-find-definition Go to definition (F12 on vscode)
+; M-, xref-pop-marker-stack Go back to where I last invoked xref-find-definition (mouse back-click on vscode)
+; C-M-. xref-find-apropos Find all identifiers whose name matches pattern
 
 ; -----------------------------------------------
 ;Line indent guides
@@ -340,13 +359,44 @@ or the current buffer directory."
 ; -----------------------------------------------
 ; themes
 (add-to-list 'load-path "~/.emacs.d/external/doomemacs-themes/")
+
 (require 'doom-themes)
 (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
       doom-themes-enable-italic t) ; if nil, italics is universally disabled
 
+(add-to-list 'load-path "~/.emacs.d/external/zenburn-theme/")
+(require 'zenburn-theme)
+(require 'darkburn-theme)
+;; use variable-pitch fonts for some headings and titles
+(setq zenburn-use-variable-pitch t)
+;; scale headings in org-mode
+(setq zenburn-scale-org-headlines t)
+;; scale headings in outline-mode
+(setq zenburn-scale-outline-headlines t)
+
+(add-to-list 'load-path "~/.emacs.d/external/nimbus-theme/")
+(require 'nimbus-theme)
+
+(add-to-list 'load-path "~/.emacs.d/external/atom-one-dark-theme/")
+(require 'atom-one-dark-theme)
+
+(add-to-list 'load-path "~/.emacs.d/external/github-dark-theme")
+(require 'github-dark-vscode-theme)
+
+(add-to-list 'load-path "~/.emacs.d/external/github-light-theme")
+(require 'github-modern-theme)
+
+(add-to-list 'load-path "~/.emacs.d/external/autothemer")
+(add-to-list 'load-path "~/.emacs.d/external/kaolin-themes")
+(require 'kaolin-themes)
+
+(add-to-list 'load-path "~/.emacs.d/external/emacs-color-themes")
+(require 'emacs-color-themes)
+
 ; Themes I like
 (setq my-theme-onedark 'doom-one)
 (setq my-theme-vsdark 'doom-dark+)
+(setq my-theme-atom-onedark 'atom-one-dark)
 (setq my-theme-onedark-vibrant 'doom-vibrant)
 (setq my-theme-onelight 'doom-one-light)
 (setq my-theme-opera 'doom-opera)
@@ -355,12 +405,21 @@ or the current buffer directory."
 (setq my-theme-material 'doom-material)
 (setq my-theme-material-dark 'doom-material-dark)
 (setq my-theme-monokai-pro 'doom-monokai-pro)
+(setq my-theme-zenburn 'zenburn)
+(setq my-theme-darkburn 'darkburn)
+(setq my-theme-nimbus 'nimbus)
+(setq my-theme-brin 'brin)
+(setq my-theme-kaolin-dark 'kaolin-dark)
+(setq my-theme-github-dark 'github-dark-vscode)
+(setq my-theme-github-light 'github-modern)
 (setq my-theme-homage-black 'doom-homage-black)
 (setq my-theme-homage-white 'doom-homage-white)
 
 ; Setting for dark and light theme
 (setq my-theme-dark my-theme-onedark-vibrant)
-(setq my-theme-light my-theme-homage-white)
+; (setq my-theme-dark my-theme-darkburn)
+; (setq my-theme-light my-theme-homage-white)
+(setq my-theme-light my-theme-github-light)
 
 ; Start with dark theme
 (load-theme my-theme-dark t)
