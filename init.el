@@ -11,6 +11,40 @@
 (ido-mode 1)
 ;(setq ido-separator "\n") ; Set for vertical list
 
+(defun test-fn()
+    (interactive)
+    (message (concat "dir root " (projectile-project-root) " " (buffer-file-name))))
+
+(defun test-test-fn()
+    (interactive)
+    (test-fn))
+
+; https://emacs.stackexchange.com/questions/13080/reloading-directory-local-variables/13096#13096
+; Auto reload dir local.el
+(defun my-reload-dir-locals-for-current-buffer ()
+  "reload dir locals for the current buffer"
+  (interactive)
+  (let ((enable-local-variables :all))
+    (hack-dir-local-variables-non-file-buffer)))
+(defun my-reload-dir-locals-for-all-buffer-in-this-directory ()
+  "For every buffer with the same `default-directory` as the 
+current buffer's, reload dir-locals."
+  (interactive)
+  (let ((dir default-directory))
+    (dolist (buffer (buffer-list))
+      (with-current-buffer buffer
+        (when (equal default-directory dir)
+          (my-reload-dir-locals-for-current-buffer))))))
+
+(add-hook 'emacs-lisp-mode-hook
+          (defun enable-autoreload-for-dir-locals ()
+            (when (and (buffer-file-name)
+                       (equal dir-locals-file
+                              (file-name-nondirectory (buffer-file-name))))
+              (add-hook 'after-save-hook
+                        'my-reload-dir-locals-for-all-buffer-in-this-directory
+                        nil t))))
+
 ; -----------------------------------------------
 ; General
 
@@ -57,6 +91,10 @@
 (use-package delight :ensure t)
 (use-package use-package-ensure-system-package :ensure t)
 
+;; Declare packages
+;; (setq my-packages
+;;       '(realgud-lldb))
+
 ; -----------------------------------------------
 ; Language server front end
 ; Use clangd for C/C++ mode
@@ -78,7 +116,13 @@
 )
 (global-set-key (kbd "C-c h") 'toggle-eldoc-detail)
 
+; Debugger
+(use-package realgud
+  :ensure t)
 
+; Mac uses lldb, needs extension
+(add-to-list 'load-path "~/.emacs.d/external/realgud-lldb/")
+(require 'realgud-lldb)
 
 ; Company mode 
 (use-package company
@@ -204,10 +248,10 @@
 (setq compile-history '("make"))  
 
 ; Keybinds for compile/recompile with a cmake project for build and debug builds
-(define-key c-mode-base-map (kbd "S-<f5>") 'my-cmake-release-compile)
-(define-key c-mode-base-map (kbd "<f5>") 'my-cmake-release-recompile)
-(define-key c-mode-base-map (kbd "S-<f6>") 'my-cmake-debug-compile)
-(define-key c-mode-base-map (kbd "<f6>") 'my-cmake-debug-recompile)
+;; (define-key c-mode-base-map (kbd "S-<f5>") 'my-cmake-release-compile)
+;; (define-key c-mode-base-map (kbd "<f5>") 'my-cmake-release-recompile)
+;; (define-key c-mode-base-map (kbd "S-<f6>") 'my-cmake-debug-compile)
+;; (define-key c-mode-base-map (kbd "<f6>") 'my-cmake-debug-recompile)
 (define-key c-mode-base-map (kbd "C-c c") 'my-single-file-compile)
 
 
@@ -472,3 +516,4 @@ or the current buffer directory."
 			(bookmarks . 5)))
 (setq dashboard-set-heading-icons t)
 (setq dashboard-set-file-icons t)
+(put 'erase-buffer 'disabled nil)
